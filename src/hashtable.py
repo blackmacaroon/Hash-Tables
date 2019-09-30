@@ -1,3 +1,4 @@
+# if collision, print a warning
 # '''
 # Linked List hash table key/value pair
 # '''
@@ -15,6 +16,7 @@ class HashTable:
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
+        self.count = 0
 
 
     def _hash(self, key):
@@ -25,14 +27,17 @@ class HashTable:
         '''
         return hash(key)
 
-
-    def _hash_djb2(self, key):
+    def _hash_djb2(self, string, max):
         '''
         Hash an arbitrary key using DJB2 hash
 
         OPTIONAL STRETCH: Research and implement DJB2
         '''
-        pass
+        hash = 5381
+        for i in string:
+            hash = (( hash << 5 ) + hash) + ord(i)
+        return (hash & 0xFFFFFFFF) % max
+
 
 
     def _hash_mod(self, key):
@@ -40,6 +45,7 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         within the storage capacity of the hash table.
         '''
+        #if key is in capacity
         return self._hash(key) % self.capacity
 
 
@@ -84,7 +90,12 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity *= 2
+        new_storage = [None] * self.capacity
+        for i in range(self.count):
+            new_storage[i] = self.storage[i]
+        self.storage = new_storage
+        
 
 
 
