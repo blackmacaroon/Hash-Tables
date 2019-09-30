@@ -25,10 +25,9 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
+        return self._hash_djb2(key)
 
-        return hash(key)
-
-    def _hash_djb2(self, string, max):
+    def _hash_djb2(self, key):
         '''
         Hash an arbitrary key using DJB2 hash
 
@@ -37,10 +36,14 @@ class HashTable:
         #because it's prime and has less opportunity for collision, set of magic numbers that work well for hash functions 
         hash = 5381
         #for every piece of our input parameter
-        for i in string:
-            # shifting bits
-            hash = (( hash << 5 ) + hash) + ord(i)
-        return (hash & 0xFFFFFFFF) % max
+        for x in key:
+            # shifting bits, fill in gaps with zeros 
+            # ord takes a parameter that's a character, and returns the integer value of the character (turn a string into a numeric value)
+            hash = (( hash << 5 ) + hash) + ord(x)
+        
+        return hash & 0xFFFFFFFF
+
+        #usage ("here is a string", self.capacity)
 
 
 
@@ -49,7 +52,6 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         within the storage capacity of the hash table.
         '''
-        #if key is in capacity
         return self._hash(key) % self.capacity
 
 
@@ -61,6 +63,25 @@ class HashTable:
 
         Fill this in.
         '''
+        # index = hash(key, self.capacity)
+        # pair = LinkedPair(key, value)
+        # #if bucket is not empty
+        # if self.storage[index] is not None:
+        #     # and if the key is something different, do you want to overwrite it
+        #     if self.storage[index].key != key:
+        #         # print warning
+        #         print(f"There is already something written at this index: {self.storage[index]} - It is {value}")
+        # #add pair to hash table
+        # self.storage[index] = pair
+        index = self._hash_mod(key)
+        if self.count >= self.capacity:
+            self.resize()
+        if self.storage[index]:
+            self.storage[index].value = value
+
+        self.storage[index] = LinkedPair(key, value)
+        self.count += 1
+        
         
 
 
@@ -73,17 +94,18 @@ class HashTable:
 
         Fill this in.
         '''
-        # valueHashed = self.storage[key]
+        # index = self.storage[key]
         
         # for i in range(key, self.count -1, 1):
         #     self.storage[i] = self.storage[i+1]
         # self.count -= 1
-        # return valueHashed
-        valueHashed = hash(key, self.capacity)
-        if self.storage[valueHashed] != None and self.storage[valueHashed].key == key:
-            self.storage[valueHashed] = None
+        # return index
+        index = self._hash_mod(key)
+        if self.storage[index] != None and self.storage[index].key == key:
+            self.storage[index] = None
         else:
-            print(f"{valueHashed} does not exist in this table")
+            print(f"{index} does not exist in this table")
+            return index
         
 
 
@@ -95,7 +117,13 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        #key not found
+        if self.storage[index] is None:
+            return None
+        #key found
+        else:
+            return self.storage[index].value
 
 
     def resize(self):
