@@ -25,6 +25,7 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
+
         return hash(key)
 
     def _hash_djb2(self, string, max):
@@ -33,8 +34,11 @@ class HashTable:
 
         OPTIONAL STRETCH: Research and implement DJB2
         '''
+        #because it's prime and has less opportunity for collision, set of magic numbers that work well for hash functions 
         hash = 5381
+        #for every piece of our input parameter
         for i in string:
+            # shifting bits
             hash = (( hash << 5 ) + hash) + ord(i)
         return (hash & 0xFFFFFFFF) % max
 
@@ -57,7 +61,7 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        
 
 
 
@@ -69,7 +73,18 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # valueHashed = self.storage[key]
+        
+        # for i in range(key, self.count -1, 1):
+        #     self.storage[i] = self.storage[i+1]
+        # self.count -= 1
+        # return valueHashed
+        valueHashed = hash(key, self.capacity)
+        if self.storage[valueHashed] != None and self.storage[valueHashed].key == key:
+            self.storage[valueHashed] = None
+        else:
+            print(f"{valueHashed} does not exist in this table")
+        
 
 
     def retrieve(self, key):
