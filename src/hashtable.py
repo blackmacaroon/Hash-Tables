@@ -52,6 +52,7 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         within the storage capacity of the hash table.
         '''
+        #mod gives an integer between zero and the max size of the hash table
         return self._hash(key) % self.capacity
 
 
@@ -80,7 +81,8 @@ class HashTable:
         #returns the integar index within the storage capacity (max) of the hashtable
         index = self._hash_mod(key)
         #if there is something in storage in that index, set the old value to the new value
-        if self.storage[index]:
+        if self.storage[index] is not None:
+            print("warning: index collision")
             self.storage[index].value = value
 
         self.storage[index] = LinkedPair(key, value)
@@ -127,12 +129,8 @@ class HashTable:
         index = self._hash_mod(key)
         slot = self.storage[index]
         #key found
-        if slot is not None:
-            return slot.value
-            
-        #key not found
-        else:
-            return None
+        
+        return slot.value
             
 
 
