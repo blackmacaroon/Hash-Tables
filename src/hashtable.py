@@ -73,9 +73,13 @@ class HashTable:
         #         print(f"There is already something written at this index: {self.storage[index]} - It is {value}")
         # #add pair to hash table
         # self.storage[index] = pair
-        index = self._hash_mod(key)
+        # is count larger than max capaxity?
         if self.count >= self.capacity:
+            #if so, resize
             self.resize()
+        #returns the integar index within the storage capacity (max) of the hashtable
+        index = self._hash_mod(key)
+        #if there is something in storage in that index, set the old value to the new value
         if self.storage[index]:
             self.storage[index].value = value
 
@@ -95,18 +99,16 @@ class HashTable:
         Fill this in.
         '''
         # index = self.storage[key]
-        
         # for i in range(key, self.count -1, 1):
         #     self.storage[i] = self.storage[i+1]
         # self.count -= 1
         # return index
         index = self._hash_mod(key)
-        if self.storage[index] != None and self.storage[index].key == key:
+        if self.storage[index]:
             self.storage[index] = None
         else:
-            print(f"{index} does not exist in this table")
-            return index
-        
+            print(f"{key} does not exist in this table")
+           
 
 
     def retrieve(self, key):
@@ -117,13 +119,21 @@ class HashTable:
 
         Fill this in.
         '''
+        #get index
+        # if self.storage[index] == None, nothing to retrieve
+        # else if self.storage[index] ! empty
+            # iterate through the linked list until key is found
+            # if key is never found, return None
         index = self._hash_mod(key)
-        #key not found
-        if self.storage[index] is None:
-            return None
+        slot = self.storage[index]
         #key found
+        if slot is not None:
+            return slot.value
+            
+        #key not found
         else:
-            return self.storage[index].value
+            return None
+            
 
 
     def resize(self):
@@ -133,10 +143,26 @@ class HashTable:
 
         Fill this in.
         '''
+        # self.capacity *= 2
+        # new_storage = [None] * self.capacity
+        # for i in range(self.count):
+        #     new_storage[i] = self.storage[i]
+        # self.storage = new_storage
+        #edge case first, if count < capacity, we're done.
+        if self.count < self.capacity:
+            return
+        # double capacity, assign new emprt storage "array"
         self.capacity *= 2
         new_storage = [None] * self.capacity
-        for i in range(self.count):
-            new_storage[i] = self.storage[i]
+        # reset count to zero
+        self.count = 0
+        # iterate through storage
+        for i in range(len(self.storage)):
+            # for each index
+            if self.storage[i]:
+                hashedKey = self._hash_mod(self.storage[i].key)
+                new_storage[hashedKey] = self.storage[i]
+
         self.storage = new_storage
         
 
