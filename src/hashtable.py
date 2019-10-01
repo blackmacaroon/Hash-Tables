@@ -101,9 +101,8 @@ class HashTable:
 
         Fill this in.
         '''
-        # index = self.storage[key]
-        # for i in range(key, self.count -1, 1):
-        #     self.storage[i] = self.storage[i+1]
+        # get index via mod
+        # overwrite old space as None, reduce count
         self.count -= 1
         # return index
         index = self._hash_mod(key)
@@ -122,7 +121,7 @@ class HashTable:
 
         Fill this in.
         '''
-        #get index
+        #get index via mod
         # if self.storage[index] == None, nothing to retrieve
         # else if self.storage[index] ! empty
             # iterate through the linked list until key is found
@@ -144,14 +143,7 @@ class HashTable:
 
         Fill this in.
         '''
-        # self.capacity *= 2
-        # new_storage = [None] * self.capacity
-        # for i in range(self.count):
-        #     new_storage[i] = self.storage[i]
-        # self.storage = new_storage
-        #edge case first, if count < capacity, we're done.
-        if self.count < self.capacity /= 2        
-
+        
         if self.count < self.capacity:
             return
         
