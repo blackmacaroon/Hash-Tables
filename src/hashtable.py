@@ -150,16 +150,22 @@ class HashTable:
         #     new_storage[i] = self.storage[i]
         # self.storage = new_storage
         #edge case first, if count < capacity, we're done.
+        if self.count < self.capacity /= 2        
+
         if self.count < self.capacity:
             return
+        
         # double capacity, assign new emprt storage "array" because log(n)
         self.capacity *= 2
         new_storage = [None] * self.capacity
         # reset count to zero
         self.count = 0
+        #iterate through each item in storage
         for pair in self.storage:
             if pair is not None:
+                #if there's a pair, add it to the new index
                 new_index = self._hash_mod(pair.key)
+                #and stick it in the new storage array
                 new_storage[new_index] = pair
         # iterate through storage
         # for i in range(len(self.storage)):
@@ -167,9 +173,6 @@ class HashTable:
         #     if self.storage[i]:
         #         hashedKey = self._hash_mod(self.storage[i].key)
         #         new_storage[hashedKey] = self.storage[i]
-
-        
-        
         # for pair in self.storage:
         #     if pair is not None:
         #         new_index = self._hash_mod(pair.key)
@@ -178,6 +181,7 @@ class HashTable:
         #         continue
         self.storage = new_storage
         print("double size", self.capacity)
+
 
 
 if __name__ == "__main__":
